@@ -67,8 +67,7 @@ public:
   /**
    * \brief Open an SVG document
    *
-   * \param svg_data Pointer to a buffer containing the SVG document,
-   * UTF-8-encoded
+   * \param svg_data Pointer to a buffer containing the SVG document
    *
    * \param svg_data_size Size of the SVG data in the buffer in bytes
    */

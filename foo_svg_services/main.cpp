@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <ranges>
+#include <string_view>
 
 #include <gsl/gsl>
 
@@ -14,7 +15,11 @@
 #include "../api/api.h"
 #include "version.h"
 
+using namespace std::string_view_literals;
+
 namespace svg_services {
+
+namespace {
 
 DECLARE_COMPONENT_VERSION("SVG services", version, "compiled: " COMPILATION_DATE);
 
@@ -24,6 +29,8 @@ const std::unordered_map<int32_t, const char*> resvg_error_messages = {
     {RESVG_ERROR_MALFORMED_GZIP, "Compressed SVGs must use Gzip"},
     {RESVG_ERROR_ELEMENTS_LIMIT_REACHED, "Maximum number of elements allowed exceeded"},
     {RESVG_ERROR_INVALID_SIZE, "SVG dimensions are invalid"}, {RESVG_ERROR_PARSING_FAILED, "Failed to parse the SVG"}};
+
+PFC_DECLARE_EXCEPTION(exception_svg_services_shutting_down, exception_svg_services, "SVG services is shutting down");
 
 class exception_resvg : public exception_svg_services {
 public:
@@ -76,7 +83,7 @@ void prgba_to_bgra(void* data, int width, int height)
 
 class SVGDocumentImpl : public svg_document {
 public:
-    explicit SVGDocumentImpl(resvg_render_tree* tree) : m_tree(tree){};
+    explicit SVGDocumentImpl(resvg_render_tree* tree) : m_tree(tree) {}
 
     [[nodiscard]] Size get_size() const noexcept override
     {
@@ -135,22 +142,74 @@ private:
     resvg_render_tree* m_tree{};
 };
 
+namespace state {
+
+resvg_options* options_with_fonts{};
+std::mutex mutex;
+bool deinitialised{};
+
+} // namespace state
+
+void initialise_options_with_fonts()
+{
+    if (state::deinitialised)
+        throw exception_svg_services_shutting_down();
+
+    std::lock_guard lock(state::mutex);
+
+    if (!state::options_with_fonts) {
+        state::options_with_fonts = resvg_options_create();
+
+        const auto timer = pfc::hires_timer::create_and_start();
+        resvg_options_load_system_fonts(state::options_with_fonts);
+        console::print(reinterpret_cast<const char*>(u8"SVG services – loaded fonts in: "), timer.queryString());
+    }
+}
+
+void deinitialise_options_with_fonts()
+{
+    std::lock_guard lock(state::mutex);
+
+    state::deinitialised = true;
+
+    if (state::options_with_fonts) {
+        resvg_options_destroy(state::options_with_fonts);
+    }
+
+    state::options_with_fonts = nullptr;
+}
+
 class SVGServicesImpl : public svg_services {
     svg_document::ptr open(const void* svg_data, size_t svg_data_size) const override
     {
-        resvg_options* opt = resvg_options_create();
-
-        auto _ = gsl::finally([opt] { resvg_options_destroy(opt); });
+        const std::string_view svg_string(static_cast<const char*>(svg_data), svg_data_size);
+        const auto contains_text = std::ranges::search(svg_string, "<text"sv);
 
         resvg_render_tree* tree{};
-        check_resvg_result(resvg_parse_tree_from_data(static_cast<const char*>(svg_data), svg_data_size, opt, &tree));
+
+        if (contains_text) {
+            initialise_options_with_fonts();
+            check_resvg_result(resvg_parse_tree_from_data(
+                static_cast<const char*>(svg_data), svg_data_size, state::options_with_fonts, &tree));
+        } else {
+            auto* options = resvg_options_create();
+            auto _ = gsl::finally([options] { resvg_options_destroy(options); });
+            check_resvg_result(
+                resvg_parse_tree_from_data(static_cast<const char*>(svg_data), svg_data_size, options, &tree));
+        }
 
         return fb2k::service_new<SVGDocumentImpl>(tree);
     }
 };
 
-namespace {
-service_factory_t<SVGServicesImpl> _;
-}
+service_factory_t<SVGServicesImpl> _svg_services_impl;
+
+class InitQuit : public initquit {
+    void on_quit() override { deinitialise_options_with_fonts(); }
+};
+
+initquit_factory_t<InitQuit> _initquit;
+
+} // namespace
 
 } // namespace svg_services
