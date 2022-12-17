@@ -85,6 +85,18 @@ class SVGDocumentImpl : public svg_document {
 public:
     explicit SVGDocumentImpl(resvg_render_tree* tree) : m_tree(tree) {}
 
+    SVGDocumentImpl(const SVGDocumentImpl&) = delete;
+    SVGDocumentImpl& operator=(const SVGDocumentImpl&) = delete;
+
+    SVGDocumentImpl(SVGDocumentImpl&&) = delete;
+    SVGDocumentImpl& operator=(SVGDocumentImpl&&) = delete;
+
+    ~SVGDocumentImpl()
+    {
+        resvg_tree_destroy(m_tree);
+        m_tree = nullptr;
+    }
+
     [[nodiscard]] Size get_size() const noexcept override
     {
         const auto size = resvg_get_image_size(m_tree);
