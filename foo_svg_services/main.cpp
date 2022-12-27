@@ -52,7 +52,7 @@ void check_resvg_result(int32_t code)
         throw exception_resvg(code);
 }
 
-uint8_t remove_premultiplied_alpha(uint8_t value, uint8_t alpha)
+uint8_t divide_by_alpha(uint8_t value, uint8_t alpha)
 {
     if (alpha == 0)
         return value;
@@ -61,8 +61,12 @@ uint8_t remove_premultiplied_alpha(uint8_t value, uint8_t alpha)
         std::clamp(std::lround(static_cast<float>(value) * 255.f / static_cast<float>(alpha)), 0l, 255l));
 }
 
-void prgba_to_bgra(void* data, int width, int height)
+void transform_pixel_values(void* data, int width, int height, bool remove_premultiplied_alpha, bool swap_red_and_green)
 {
+    const auto dest_r_pos = swap_red_and_green ? 2 : 0;
+    constexpr auto dest_g_pos = 1;
+    const auto dest_b_pos = swap_red_and_green ? 0 : 2;
+
     const auto rows = static_cast<uint8_t*>(data);
     for (const auto row_index : std::ranges::views::iota(0, height)) {
         for (const auto column_index : std::ranges::views::iota(0, width)) {
@@ -74,9 +78,9 @@ void prgba_to_bgra(void* data, int width, int height)
             const auto b = rows[row_offset + column_offset + 2];
             const auto a = rows[row_offset + column_offset + 3];
 
-            rows[row_offset + column_offset] = remove_premultiplied_alpha(b, a);
-            rows[row_offset + column_offset + 1] = remove_premultiplied_alpha(g, a);
-            rows[row_offset + column_offset + 2] = remove_premultiplied_alpha(r, a);
+            rows[row_offset + column_offset + dest_r_pos] = remove_premultiplied_alpha ? divide_by_alpha(r, a) : r;
+            rows[row_offset + column_offset + dest_g_pos] = remove_premultiplied_alpha ? divide_by_alpha(g, a) : g;
+            rows[row_offset + column_offset + dest_b_pos] = remove_premultiplied_alpha ? divide_by_alpha(b, a) : b;
         }
     }
 }
@@ -146,8 +150,8 @@ public:
 
         resvg_render(m_tree, resvg_fit_to{}, transform, output_width, output_height, static_cast<char*>(output_buffer));
 
-        if (output_pixel_format == PixelFormat::BGRA)
-            prgba_to_bgra(output_buffer, output_width, output_height);
+        transform_pixel_values(output_buffer, output_width, output_height, output_pixel_format == PixelFormat::BGRA,
+            output_pixel_format != PixelFormat::PRGBA);
     }
 
 private:

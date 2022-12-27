@@ -22,6 +22,7 @@ struct Rect {
 enum class PixelFormat {
   BGRA,
   PRGBA,
+  PBGRA,
 };
 
 enum class ScalingMode {
