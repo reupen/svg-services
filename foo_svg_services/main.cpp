@@ -178,7 +178,8 @@ void initialise_options_with_fonts()
 
         const auto timer = pfc::hires_timer::create_and_start();
         resvg_options_load_system_fonts(state::options_with_fonts);
-        console::print(reinterpret_cast<const char*>(u8"SVG services – loaded fonts in: "), timer.queryString());
+        console::print(reinterpret_cast<const char*>(u8"SVG services – loaded fonts in: "),
+            pfc::format_float(timer.query(), 0, 3), " s");
     }
 }
 
