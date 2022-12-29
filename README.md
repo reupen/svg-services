@@ -19,6 +19,13 @@ abort_callback_dummy aborter;
 const auto render_height = 512;
 const auto render_width = 512;
 const auto file_path = "R(c:\path\to\svg\file)";
+
+svg_services::svg_services::ptr svg_api;
+
+if (!fb2k::std_api_try_get(svg_api)) {
+    // Handle the case when the API isn’t available
+}
+
 const auto svg_data = filesystem::g_readWholeFile(file_path, 10'000'000, aborter);
 
 std::vector<uint8_t> bitmap_data(
