@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <ranges>
 #include <string_view>
+#include <unordered_set>
 
 #include <gsl/gsl>
 
@@ -31,6 +32,7 @@ const std::unordered_map<int32_t, const char*> resvg_error_messages = {
     {RESVG_ERROR_INVALID_SIZE, "SVG dimensions are invalid"}, {RESVG_ERROR_PARSING_FAILED, "Failed to parse the SVG"}};
 
 PFC_DECLARE_EXCEPTION(exception_svg_services_shutting_down, exception_svg_services, "SVG services is shutting down");
+PFC_DECLARE_EXCEPTION(exception_svg_services_invalid_argument, exception_svg_services, "Invalid argument");
 
 class exception_resvg : public exception_svg_services {
 public:
@@ -85,6 +87,25 @@ void transform_pixel_values(void* data, int width, int height, bool remove_premu
     }
 }
 
+void validate_position(Position value)
+{
+    if (!std::unordered_set{Position::TopLeft, Position::Centred}.contains(value))
+        throw exception_svg_services_invalid_argument("Invalid position");
+}
+
+void validate_scaling_mode(ScalingMode value)
+{
+    if (!std::unordered_set{ScalingMode::None, ScalingMode::Fit, ScalingMode::Zoom, ScalingMode::Stretch}.contains(
+            value))
+        throw exception_svg_services_invalid_argument("Invalid scaling mode");
+}
+
+void validate_pixel_format(PixelFormat value)
+{
+    if (!std::unordered_set{PixelFormat::BGRA, PixelFormat::PRGBA, PixelFormat::PBGRA}.contains(value))
+        throw exception_svg_services_invalid_argument("Invalid pixel format");
+}
+
 class SVGDocumentImpl : public svg_document {
 public:
     explicit SVGDocumentImpl(resvg_render_tree* tree) : m_tree(tree) {}
@@ -116,6 +137,19 @@ public:
     void render(int output_width, int output_height, Position position, ScalingMode scaling_mode,
         PixelFormat output_pixel_format, void* output_buffer, size_t output_buffer_size) const override
     {
+        validate_position(position);
+        validate_scaling_mode(scaling_mode);
+        validate_pixel_format(output_pixel_format);
+
+        if (output_width < 0)
+            throw exception_svg_services_invalid_argument("Negative widths are invalid");
+
+        if (output_height < 0)
+            throw exception_svg_services_invalid_argument("Negative heights are invalid");
+
+        if (output_buffer_size < gsl::narrow<size_t>(output_width) * gsl::narrow<size_t>(output_height) * size_t{4})
+            throw exception_svg_services_invalid_argument("Output buffer is too small");
+
         if (output_width == 0 || output_height == 0)
             return;
 
