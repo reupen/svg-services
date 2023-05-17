@@ -2,12 +2,11 @@
 
 #include <algorithm>
 #include <ranges>
-#include <string_view>
 #include <unordered_set>
 
 #include <gsl/gsl>
 
-#include "../resvg/c-api/resvg.h"
+#include "../resvg/crates/c-api/resvg.h"
 
 #include "../pfc/pfc.h"
 
@@ -182,7 +181,7 @@ public:
             position == Position::TopLeft ? 0.0 : (output_width - width_scaling_factor * size.width) / 2.0,
             position == Position::TopLeft ? 0.0 : (output_height - height_scaling_factor * size.height) / 2.0};
 
-        resvg_render(m_tree, resvg_fit_to{}, transform, output_width, output_height, static_cast<char*>(output_buffer));
+        resvg_render(m_tree, transform, output_width, output_height, static_cast<char*>(output_buffer));
 
         transform_pixel_values(output_buffer, output_width, output_height, output_pixel_format == PixelFormat::BGRA,
             output_pixel_format != PixelFormat::PRGBA);

@@ -42,10 +42,10 @@ def build(configuration, platform):
             "cargo",
             f"+{toolchain}",
             "build",
-            "--manifest-path", r"resvg\c-api\Cargo.toml",
+            "--manifest-path", r"resvg\crates\c-api\Cargo.toml",
             *(["--release"] if configuration == "release" else []),
             "--target-dir",
-            rf"resvg\c-api\{platform}"
+            rf"resvg\crates\c-api\{platform}"
         ],
         check=True,
     )
