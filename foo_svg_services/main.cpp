@@ -177,9 +177,14 @@ public:
                   return std::make_tuple(width_ratio, height_ratio);
               }();
 
-        const auto transform = resvg_transform{width_scaling_factor, 0, 0, height_scaling_factor,
-            position == Position::TopLeft ? 0.0 : (output_width - width_scaling_factor * size.width) / 2.0,
-            position == Position::TopLeft ? 0.0 : (output_height - height_scaling_factor * size.height) / 2.0};
+        const auto transform = resvg_transform{static_cast<float>(width_scaling_factor), 0.0f, 0.0f,
+            static_cast<float>(height_scaling_factor),
+            position == Position::TopLeft
+                ? 0.0f
+                : static_cast<float>((output_width - width_scaling_factor * size.width) / 2.0),
+            position == Position::TopLeft
+                ? 0.0f
+                : static_cast<float>((output_height - height_scaling_factor * size.height) / 2.0)};
 
         resvg_render(m_tree, transform, output_width, output_height, static_cast<char*>(output_buffer));
 
