@@ -129,7 +129,7 @@
       <Culture>0x0809</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>comctl32.lib;shell32.lib;shlwapi.lib;gdiplus.lib;../foobar2000/shared/shared-$(Platform).lib;Msimg32.lib;uxtheme.lib;..\resvg\crates\c-api\$(Platform.ToLower())\$(Configuration.ToLower())\resvg.lib;Ws2_32.lib;Bcrypt.lib;Userenv.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ntdll.lib;comctl32.lib;shell32.lib;shlwapi.lib;gdiplus.lib;../foobar2000/shared/shared-$(Platform).lib;Msimg32.lib;uxtheme.lib;..\resvg\crates\c-api\$(Platform.ToLower())\$(Configuration.ToLower())\resvg.lib;Ws2_32.lib;Bcrypt.lib;Userenv.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -180,7 +180,7 @@
       <Culture>0x0809</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>comctl32.lib;shell32.lib;shlwapi.lib;gdiplus.lib;../foobar2000/shared/shared-$(Platform).lib;Msimg32.lib;uxtheme.lib;..\resvg\crates\c-api\$(Platform.ToLower())\$(Configuration.ToLower())\resvg.lib;Ws2_32.lib;Bcrypt.lib;Userenv.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ntdll.lib;comctl32.lib;shell32.lib;shlwapi.lib;gdiplus.lib;../foobar2000/shared/shared-$(Platform).lib;Msimg32.lib;uxtheme.lib;..\resvg\crates\c-api\$(Platform.ToLower())\$(Configuration.ToLower())\resvg.lib;Ws2_32.lib;Bcrypt.lib;Userenv.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -229,7 +229,7 @@
       <Culture>0x0809</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>comctl32.lib;shell32.lib;shlwapi.lib;gdiplus.lib;../foobar2000/shared/shared-$(Platform).lib;Msimg32.lib;uxtheme.lib;..\resvg\crates\c-api\$(Platform.ToLower())\$(Configuration.ToLower())\resvg.lib;Ws2_32.lib;Bcrypt.lib;Userenv.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ntdll.lib;comctl32.lib;shell32.lib;shlwapi.lib;gdiplus.lib;../foobar2000/shared/shared-$(Platform).lib;Msimg32.lib;uxtheme.lib;..\resvg\crates\c-api\$(Platform.ToLower())\$(Configuration.ToLower())\resvg.lib;Ws2_32.lib;Bcrypt.lib;Userenv.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
@@ -275,7 +275,7 @@
       <Culture>0x0809</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>comctl32.lib;shell32.lib;shlwapi.lib;gdiplus.lib;../foobar2000/shared/shared-$(Platform).lib;Msimg32.lib;uxtheme.lib;..\resvg\crates\c-api\$(Platform.ToLower())\$(Configuration.ToLower())\resvg.lib;Ws2_32.lib;Bcrypt.lib;Userenv.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ntdll.lib;comctl32.lib;shell32.lib;shlwapi.lib;gdiplus.lib;../foobar2000/shared/shared-$(Platform).lib;Msimg32.lib;uxtheme.lib;..\resvg\crates\c-api\$(Platform.ToLower())\$(Configuration.ToLower())\resvg.lib;Ws2_32.lib;Bcrypt.lib;Userenv.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
