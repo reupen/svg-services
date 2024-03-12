@@ -37,7 +37,7 @@ class exception_resvg : public exception_svg_services {
 public:
     exception_resvg(int32_t code)
         : exception_svg_services(
-            resvg_error_messages.contains(code) ? resvg_error_messages.at(code) : "Unknown resvg error")
+              resvg_error_messages.contains(code) ? resvg_error_messages.at(code) : "Unknown resvg error")
         , m_code(code)
     {
     }
