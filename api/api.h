@@ -40,7 +40,9 @@ class NOVTABLE svg_document : public service_base {
 public:
     [[nodiscard]] virtual Size get_size() const noexcept = 0;
 
-    [[nodiscard]] virtual Rect get_view_box() const noexcept = 0;
+    [[nodiscard, deprecated("resvg no longer returns a separate view box size. Use get_size() instead.")]] virtual Rect
+    get_view_box() const noexcept
+        = 0;
 
     /**
      * \brief Render the SVG document
@@ -50,7 +52,7 @@ public:
      * \param position Where to position the rendered SVG in the output bitmap
      * \param scaling_mode The scaling mode to use to fit the SVG to the output
      * \param output_pixel_format The pixel format to render the SVG in
-     * bitmap \param output_buffer Pointer to a writable buffer of at least size
+     * \param output_buffer Pointer to a writable buffer of at least size
      *                      render_width * render_height * 4.
      *                      This will receive a 32-bpp bitmap.
      * \param output_buffer_size Size of the output buffer in bytes
@@ -68,7 +70,6 @@ public:
      * \brief Open an SVG document
      *
      * \param svg_data Pointer to a buffer containing the SVG document
-     *
      * \param svg_data_size Size of the SVG data in the buffer in bytes
      */
     virtual svg_document::ptr open(const void* svg_data, size_t svg_data_size) const = 0;
