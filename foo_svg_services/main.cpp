@@ -129,8 +129,8 @@ public:
 
     [[nodiscard]] Rect get_view_box() const noexcept override
     {
-        const auto view_box = resvg_get_image_viewbox(m_tree);
-        return {view_box.x, view_box.y, view_box.width, view_box.height};
+        const auto size = resvg_get_image_size(m_tree);
+        return {0, 0, size.width, size.height};
     }
 
     void render(int output_width, int output_height, Position position, ScalingMode scaling_mode,
