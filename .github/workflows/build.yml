@@ -43,14 +43,20 @@ jobs:
         run: |
           Invoke-WebRequest -Uri https://github.com/reupen/msbuild-github-logger/releases/download/v1.0.1/Reupen.MSBuild.GitHubLogger.dll -OutFile "$Env:Temp\Reupen.MSBuild.GitHubLogger.dll"
 
-      - name: Set up Rust toolchains
-        if: matrix.platform == 'win32'
-        run: |
-          rustup toolchain install stable-i686-pc-windows-msvc
+      - name: Set up Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          rust-src-dir: resvg
+          target: ${{ matrix.platform == 'win32' && 'i686-pc-windows-msvc' || '' }}
 
       - name: Build resvg
         run: |
           py .\build-resvg.py '${{ matrix.configuration }}' '${{ matrix.platform }}'
+
+      - name: Collect resvg licences
+        run: |
+          cargo install cargo-about
+          .\collect-resvg-licences.ps1
 
       - name: Build
         run: |

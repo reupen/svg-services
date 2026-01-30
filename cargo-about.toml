@@ -1,0 +1,9 @@
+accepted = [
+    "Apache-2.0",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "MIT",
+    "Zlib"
+]
+ignore-build-dependencies = true
+ignore-dev-dependencies = true

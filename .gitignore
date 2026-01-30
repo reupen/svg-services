@@ -194,3 +194,4 @@ vcpkg_installed/
 component-packages/
 
 /foo_svg_services/version.h
+/cargo-about.txt
