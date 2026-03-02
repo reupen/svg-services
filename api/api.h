@@ -41,8 +41,7 @@ public:
     [[nodiscard]] virtual Size get_size() const noexcept = 0;
 
     [[nodiscard, deprecated("resvg no longer returns a separate view box size. Use get_size() instead.")]] virtual Rect
-    get_view_box() const noexcept
-        = 0;
+    get_view_box() const noexcept = 0;
 
     /**
      * \brief Render the SVG document
@@ -58,8 +57,7 @@ public:
      * \param output_buffer_size Size of the output buffer in bytes
      */
     virtual void render(int output_width, int output_height, Position position, ScalingMode scaling_mode,
-        PixelFormat output_pixel_format, void* output_buffer, size_t output_buffer_size) const
-        = 0;
+        PixelFormat output_pixel_format, void* output_buffer, size_t output_buffer_size) const = 0;
 
     FB2K_MAKE_SERVICE_INTERFACE(svg_document, service_base);
 };
