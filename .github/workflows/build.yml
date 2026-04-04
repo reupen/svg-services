@@ -47,6 +47,7 @@ jobs:
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           rust-src-dir: resvg
+          rustflags: ""
           target: ${{ matrix.platform == 'win32' && 'i686-pc-windows-msvc' || '' }}
 
       - name: Build resvg
