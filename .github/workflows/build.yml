@@ -56,7 +56,7 @@ jobs:
 
       - name: Collect resvg licences
         run: |
-          cargo install cargo-about
+          cargo install cargo-about --features cli
           .\collect-resvg-licences.ps1
 
       - name: Build
