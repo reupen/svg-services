@@ -44,10 +44,10 @@ jobs:
           Invoke-WebRequest -Uri https://github.com/reupen/msbuild-github-logger/releases/download/v1.0.1/Reupen.MSBuild.GitHubLogger.dll -OutFile "$Env:Temp\Reupen.MSBuild.GitHubLogger.dll"
 
       - name: Set up Rust
-        uses: actions-rust-lang/setup-rust-toolchain@v1
+        uses: actions-rust-lang/setup-rust-toolchain@v2
         with:
+          build-warnings: ""
           rust-src-dir: resvg
-          rustflags: ""
           target: ${{ matrix.platform == 'win32' && 'i686-pc-windows-msvc' || '' }}
 
       - name: Build resvg
